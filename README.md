@@ -15,7 +15,21 @@ For more information about this repository and its usage, please see [Terraform 
 
 SourceFuse's AWS Reference Architecture (ARC) Terraform module simplifies the creation and management of essential AWS infrastructure components. It is designed to provision and configure the following resources:
 
-1.
+1. Amazon Kinesis Data Stream (aws_kinesis_stream):
+    - Name: A unique name for the Kinesis stream, generated using a local variable.
+    - Shard Count: The number of shards provisioned for the stream. This can be dynamically set based  on  the stream mode (PROVISIONED or ON_DEMAND).
+    - Retention Period: The length of time that data records are accessible after they are added to the stream.
+    - Shard Level Metrics: Metrics to be enabled for monitoring the stream at the shard level.
+    - Enforce Consumer Deletion: A flag to enforce consumer deletion when the stream is deleted.
+    - Encryption Type: The encryption type to be used for the stream.
+    - KMS Key ID: The KMS key ID for encrypting data records in the stream.
+    - Stream Mode Details: Dynamic configuration block to set the stream mode (PROVISIONED or ON_DEMAND).
+    - Tags: Key-value pairs to tag the stream for identification and management.  
+
+2. Amazon Kinesis Stream Consumer (aws_kinesis_stream_consumer):  
+    - Count: The number of consumer instances to create, determined by the var.consumer_count variables.
+    - Name: A unique name for each consumer, generated using a local variable and the count index
+    - Stream ARN: The Amazon Resource Name (ARN) of the Kinesis stream to which the consumer is attached.
 
 ### Prerequisites
 Before using this module, ensure you have the following:
@@ -48,6 +62,15 @@ Inside the `variables.tf` or in `*.tfvars` file, you should define values for th
 In your main Terraform configuration file (e.g., main.tf), you can use the module. Specify the source of the module, and version, For Example
 
 ```hcl
+module "kinesis" {
+  source         = "sourcefuse/arc-kinesis-stream/aws"
+  version        = "0.0.1"
+  name           = "${var.namespace}-${var.environment}-kinesis"
+  shard_count    = var.shard_count
+  consumer_count = var.consumer_count
+
+  tags = module.tags.tags
+}
 
 ```
 
@@ -56,7 +79,20 @@ In your main Terraform configuration file (e.g., main.tf), you can use the modul
 Inside the `outputs.tf` file of the module, you can define output values that can be referenced in the main configuration. For example:
 
 ```hcl
+output "name" {
+  description = "Name of the Kinesis stream."
+  value       = module.kinesis.name
+}
 
+output "shard_count" {
+  description = "Number of shards provisioned."
+  value       = module.kinesis.shard_count
+}
+
+output "stream_arn" {
+  description = "ARN of the Kinesis stream."
+  value       = module.kinesis.stream_arn
+}
 
 ```
 
