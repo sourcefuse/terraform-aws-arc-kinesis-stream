@@ -19,8 +19,8 @@ resource "aws_kinesis_stream" "this" {
 }
 
 resource "aws_kinesis_stream_consumer" "this" {
-  count = var.consumer_count // This allows you to dynamically control the number of Kinesis stream consumers
+  for_each = { for idx in range(var.consumer_count) : idx => idx }
 
-  name       = format("%s-consumer-%s", local.stream_name, count.index)
+  name       = "${local.stream_name}-consumer-${each.key}"
   stream_arn = aws_kinesis_stream.this.arn
 }
