@@ -17,6 +17,9 @@
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=sourcefuse_terraform-aws-arc-kinesis-stream&token=b4da1709f70e10c956ed98d2510423b22dde8564)](https://sonarcloud.io/summary/new_code?id=sourcefuse_terraform-aws-arc-kinesis-stream)
 
+> [!TIP]
+> 🤖 **New:** Use this module with AI assistants via the [ARC IaC MCP Server](https://github.com/sourcefuse/arc-iac-mcp) — search, scaffold, and security-scan ARC modules from natural language. [Quick setup ↓](#ai-assistant-integration-arc-iac-mcp)
+
 ## Overview
 
 Creates Kinesis Data Streams with configurable shard count, enhanced fan-out consumers, and KMS encryption.
